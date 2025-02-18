@@ -4,6 +4,9 @@ module="scull"
 device="scull"
 mode="664"
 
+KERNEL_VERSION=$(uname -r)
+MODULE_DIR="/lib/modules/$KERNEL_VERSION/extra"
+
 # Group: since distributions do it differently, look for wheel or use staff
 if grep -q '^staff:' /etc/group; then
     group="staff"
@@ -13,7 +16,7 @@ fi
 
 # invoke insmod with all arguments we got
 # and use a pathname, as insmod doesn't look in . by default
-insmod ./$module.ko $* || exit 1
+insmod "$MODULE_DIR"/"$module".ko $* || exit 1
 
 # retrieve major number
 major=$(awk "\$2==\"$module\" {print \$1}" /proc/devices)
